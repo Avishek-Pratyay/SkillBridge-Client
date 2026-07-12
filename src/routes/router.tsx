@@ -14,11 +14,12 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Details from "../pages/Details/Details";
 import UpdateCourse from "../pages/UpdateCourse/UpdateCourse";
 import ProtectedRoute from "./ProtectedRoute";
-
+import NotFound from "../pages/NotFound/NotFound";
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <NotFound />,
     children: [
       {
         index: true,

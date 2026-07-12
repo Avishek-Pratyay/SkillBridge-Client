@@ -1,47 +1,44 @@
 import {
   createContext,
-  useEffect,
   useState,
 } from "react";
 import type { ReactNode } from "react";
 
-import { getToken, removeToken, saveToken } from "../utils/token";
+import { removeToken, saveToken } from "../utils/token";
 import { loginUser } from "../services/authService";
 
-type User = {
+export type User = {
+  name: string;
   email: string;
+  photoURL: string;
+  role: string;
 } | null;
 
 type AuthContextType = {
   user: User;
   loading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<boolean>;
   logout: () => void;
 };
 
-export const AuthContext = createContext<AuthContextType>(
-  {} as AuthContextType
-);
+export const AuthContext =
+  createContext<AuthContextType>(
+    {} as AuthContextType
+  );
 
 const AuthProvider = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-  const [user, setUser] = useState<User>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] =
+    useState<User>(null);
 
-  useEffect(() => {
-    const token = getToken();
-
-    if (token) {
-      setUser({
-        email: "Logged User",
-      });
-    }
-
-    setLoading(false);
-  }, []);
+  const [loading] =
+    useState(false);
 
   const login = async (
     email: string,
@@ -53,17 +50,20 @@ const AuthProvider = ({
         password,
       });
 
-      if (data.success) {
-        saveToken(data.token);
-
-        setUser({
-          email,
-        });
-
-        return true;
+      if (!data.success) {
+        return false;
       }
 
-      return false;
+      saveToken(data.token);
+
+      setUser({
+        name: data.user.name,
+        email: data.user.email,
+        photoURL: data.user.photoURL,
+        role: data.user.role,
+      });
+
+      return true;
     } catch {
       return false;
     }

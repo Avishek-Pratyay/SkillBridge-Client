@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-
 import { getCourses } from "../../services/courseService";
 
 type Course = {
@@ -15,47 +14,73 @@ type Course = {
 
 const Explore = () => {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [allCourses, setAllCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const [category, setCategory] = useState("");
   const [sort, setSort] = useState("");
 
+  // Debounce Search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch Courses
   useEffect(() => {
     fetchCourses();
-  }, [search, category, sort]);
+  }, [debouncedSearch, category, sort]);
 
   const fetchCourses = async () => {
-    setLoading(true);
-
     try {
+      setLoading(true);
+
       const res = await getCourses(
-        search,
+        debouncedSearch,
         category,
         sort
       );
 
       setCourses(res.data);
+
+      // Store all courses once for dynamic categories
+      if (
+        !debouncedSearch &&
+        !category &&
+        !sort
+      ) {
+        setAllCourses(res.data);
+      }
+    } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        <h2 className="text-3xl font-bold">
-          Loading Courses...
-        </h2>
-      </div>
-    );
-  }
+  // Dynamic Categories
+  const categories = useMemo(() => {
+    return [
+      ...new Set(
+        allCourses.map(
+          (course) => course.category
+        )
+      ),
+    ];
+  }, [allCourses]);
 
   return (
     <section className="bg-slate-100 min-h-screen py-12">
 
       <div className="max-w-7xl mx-auto px-5">
-                {/* Header */}
+
+        {/* Header */}
 
         <div className="text-center mb-10">
 
@@ -69,7 +94,7 @@ const Explore = () => {
 
         </div>
 
-        {/* Search & Filter */}
+                {/* Search & Filter */}
 
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-10">
 
@@ -79,11 +104,9 @@ const Explore = () => {
 
             <input
               type="text"
-              placeholder="Search course..."
+              placeholder="Search courses..."
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
               className="border rounded-xl px-4 py-3 focus:ring-4 focus:ring-blue-200 outline-none"
             />
 
@@ -91,39 +114,21 @@ const Explore = () => {
 
             <select
               value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
+              onChange={(e) => setCategory(e.target.value)}
               className="border rounded-xl px-4 py-3"
             >
-
               <option value="">
                 All Categories
               </option>
 
-              <option value="Web Development">
-                Web Development
-              </option>
-
-              <option value="Programming">
-                Programming
-              </option>
-
-              <option value="Design">
-                Design
-              </option>
-
-              <option value="Business">
-                Business
-              </option>
-
-              <option value="Marketing">
-                Marketing
-              </option>
-
-              <option value="Photography">
-                Photography
-              </option>
+              {categories.map((cat) => (
+                <option
+                  key={cat}
+                  value={cat}
+                >
+                  {cat}
+                </option>
+              ))}
 
             </select>
 
@@ -131,12 +136,9 @@ const Explore = () => {
 
             <select
               value={sort}
-              onChange={(e) =>
-                setSort(e.target.value)
-              }
+              onChange={(e) => setSort(e.target.value)}
               className="border rounded-xl px-4 py-3"
             >
-
               <option value="">
                 Sort Courses
               </option>
@@ -150,29 +152,61 @@ const Explore = () => {
               </option>
 
               <option value="newest">
-                Newest
+                Newest First
               </option>
 
             </select>
 
           </div>
 
-        </div>
+          {/* Loading Spinner */}
 
-        {/* Course Grid */}
+          {loading && (
+
+            <div className="flex justify-center mt-6">
+
+              <span className="loading loading-spinner loading-lg text-blue-600"></span>
+
+            </div>
+
+          )}
+
+        </div>
+                {/* Course Grid */}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {courses.length === 0 ? (
 
-            <div className="col-span-full text-center py-20">
+          {courses.length === 0 ? (
 
-              <h2 className="text-3xl font-bold text-gray-700">
-                No Courses Found
-              </h2>
+            <div className="col-span-full">
 
-              <p className="text-gray-500 mt-3">
-                Try changing your search or filters.
-              </p>
+              <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
+
+                <div className="text-6xl mb-5">
+                  📚
+                </div>
+
+                <h2 className="text-3xl font-bold text-gray-800">
+                  No Courses Found
+                </h2>
+
+                <p className="text-gray-500 mt-3">
+                  Try changing your search or selecting another category.
+                </p>
+
+
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setCategory("");
+                    setSort("");
+                  }}
+                  className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition"
+                >
+                  Clear Filters
+                </button>
+
+              </div>
 
             </div>
 
@@ -185,7 +219,7 @@ const Explore = () => {
                 className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 hover:-translate-y-2"
               >
 
-                {/* Course Image */}
+                {/* Image */}
 
                 <img
                   src={course.image}
@@ -193,29 +227,38 @@ const Explore = () => {
                   className="w-full h-56 object-cover"
                 />
 
-                {/* Card Body */}
 
                 <div className="p-6">
 
+
                   {/* Category */}
 
-                  <span className="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+                  <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold mb-4">
+
                     {course.category}
+
                   </span>
+
 
                   {/* Title */}
 
                   <h2 className="text-2xl font-bold text-gray-800 mb-3 line-clamp-2">
+
                     {course.title}
+
                   </h2>
+
 
                   {/* Description */}
 
                   <p className="text-gray-600 mb-5 line-clamp-3">
+
                     {course.shortDescription}
+
                   </p>
 
-                  {/* Rating & Price */}
+
+                  {/* Price & Rating */}
 
                   <div className="flex justify-between items-center mb-6">
 
@@ -223,44 +266,52 @@ const Explore = () => {
                       ⭐ {course.rating}
                     </span>
 
-                    <span className="text-green-600 font-bold text-xl">
+
+                    <span className="text-green-600 text-xl font-bold">
                       ${course.price}
                     </span>
 
                   </div>
 
-                  {/* Details Button */}
+
+                  {/* Details */}
 
                   <Link
                     to={`/course/${course._id}`}
-                    className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition"
+                    className="block text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
                   >
                     View Details
                   </Link>
 
+
                 </div>
+
 
               </div>
 
             ))
 
           )}
-                  </div>
 
-        {/* Footer */}
+        </div>
+                {/* Bottom Section */}
 
         <div className="mt-16 text-center">
 
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-3xl font-bold text-gray-800">
             Keep Learning 🚀
           </h2>
 
-          <p className="text-gray-500 mt-3">
-            New professional courses are added regularly. Explore and level up
-            your skills today.
+          <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+
+            New professional courses are added regularly.
+            Continue exploring and build your skills with SkillBridge.
+
           </p>
 
+
         </div>
+
 
       </div>
 
@@ -268,4 +319,6 @@ const Explore = () => {
   );
 };
 
+
 export default Explore;
+

@@ -132,23 +132,41 @@ const Navbar = () => {
                 className="flex items-center gap-3 hover:bg-gray-100 px-3 py-2 rounded-xl transition"
               >
 
-                <div className="w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                <div className="w-11 h-11 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center">
 
-                  {user.email.charAt(0).toUpperCase()}
+  {user.photoURL ? (
 
-                </div>
+    <img
+      src={user.photoURL}
+      alt={user.name}
+      className="w-full h-full object-cover"
+    />
+
+  ) : (
+
+    <span className="text-white font-bold text-lg">
+
+      {user.name.charAt(0).toUpperCase()}
+
+    </span>
+
+  )}
+
+</div>
 
                 <div className="text-left">
 
-                  <p className="font-semibold text-gray-800">
+<p className="font-semibold text-gray-800">
 
-                    {user.email}
+  {user.name}
 
-                  </p>
+</p>
 
-                  <p className="text-sm text-gray-500">
-                    Student
-                  </p>
+<p className="text-sm text-gray-500">
+
+  {user.email}
+
+</p>
 
                 </div>
 
@@ -296,19 +314,28 @@ const Navbar = () => {
 
                   <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
 
-                    {user.email.charAt(0).toUpperCase()}
-
+user.photoURL ? (
+  <img
+    src={user.photoURL}
+    alt={user.name}
+    className="w-full h-full object-cover"
+  />
+) : (
+  <span className="text-white font-bold">
+    {user.name.charAt(0).toUpperCase()}
+  </span>
+)
                   </div>
 
                   <div>
 
                     <p className="font-semibold">
-                      {user.email}
-                    </p>
+  {user.name}
+</p>
 
-                    <p className="text-gray-500 text-sm">
-                      Student
-                    </p>
+<p className="text-gray-500 text-sm">
+  {user.email}
+</p>
 
                   </div>
 
