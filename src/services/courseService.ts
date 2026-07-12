@@ -23,8 +23,19 @@ export const addCourse = async (course: CourseData) => {
   return res.data;
 };
 
-export const getCourses = async () => {
-  const res = await api.get("/courses");
+export const getCourses = async (
+  search = "",
+  category = "",
+  sort = ""
+) => {
+  const res = await api.get("/courses", {
+    params: {
+      search,
+      category,
+      sort,
+    },
+  });
+
   return res.data;
 };
 
