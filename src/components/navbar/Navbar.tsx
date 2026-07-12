@@ -1,6 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+
   const links = [
     { name: "Home", path: "/" },
     { name: "Explore", path: "/explore" },
@@ -11,6 +14,7 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+
         <Link
           to="/"
           className="text-3xl font-bold text-blue-600"
@@ -34,12 +38,30 @@ const Navbar = () => {
           ))}
         </div>
 
-        <Link
-          to="/login"
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Login
-        </Link>
+        {user ? (
+          <div className="flex items-center gap-4">
+
+            <span className="text-gray-700">
+              {user.email}
+            </span>
+
+            <button
+              onClick={logout}
+              className="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600"
+            >
+              Logout
+            </button>
+
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Login
+          </Link>
+        )}
+
       </div>
     </nav>
   );
