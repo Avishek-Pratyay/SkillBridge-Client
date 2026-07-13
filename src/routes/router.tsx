@@ -15,6 +15,8 @@ import Details from "../pages/Details/Details";
 import UpdateCourse from "../pages/UpdateCourse/UpdateCourse";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "../pages/NotFound/NotFound";
+import Checkout from "../pages/Payment/Checkout";
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -61,6 +63,22 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+  path: "checkout/:id",
+  element: (
+    <ProtectedRoute>
+      <Checkout />
+    </ProtectedRoute>
+  ),
+},
+{
+  path: "payment-success",
+  element: (
+    <ProtectedRoute>
+      <PaymentSuccess />
+    </ProtectedRoute>
+  ),
+},
       {
   path: "/update-course/:id",
   element: (

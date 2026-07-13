@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
 import { getMyCourses } from "../../services/courseService";
-
+import StudentDashboard from "./StudentDashboard";
 const Dashboard = () => {
 
   const { user } = useAuth();
+  if (user?.role === "student") {
+  return <StudentDashboard />;
+}
 
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

@@ -106,18 +106,34 @@ if (loading) {
 
                   <Link
                     to={`/course/${course._id}`}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    className=" bg-blue-600  hover:bg-blue-800 text-white px-4 py-2 rounded-lg hover:-translate-y-1 transition duration-300 "
                   >
                     Details
                   </Link>
                 </div>
 
               </div>
+              
             </div>
+            
+            
           ))}
         </div>
+        
+        
+        
       )}
+      <div className="flex justify-center mt-12">
+  <Link
+    to="/explore"
+    className="bg-blue-600 hover:bg-blue-800 text-white px-8 py-3 rounded-xl font-semibold hover:-translate-y-2 transition duration-300"
+  >
+    Explore All Courses →
+  </Link>
+</div>
+      
     </section>
+    
   );
 };
 

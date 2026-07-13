@@ -11,7 +11,8 @@ export type User = {
   name: string;
   email: string;
   photoURL: string;
-  role: string;
+  role: "student" | "instructor";
+  subscription: boolean;
 } | null;
 
 type AuthContextType = {
@@ -56,12 +57,13 @@ const AuthProvider = ({
 
       saveToken(data.token);
 
-      setUser({
-        name: data.user.name,
-        email: data.user.email,
-        photoURL: data.user.photoURL,
-        role: data.user.role,
-      });
+setUser({
+  name: data.user.name,
+  email: data.user.email,
+  photoURL: data.user.photoURL,
+  role: data.user.role,
+  subscription: data.user.subscription,
+});
 
       return true;
     } catch {

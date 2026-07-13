@@ -27,6 +27,8 @@ const Register = () => {
   const password = (formData.get("password") as string) || "";
   const confirmPassword =
     (formData.get("confirmPassword") as string) || "";
+    const role =
+  (formData.get("role") as string) || "student";
 
   if (!name || !email || !password) {
     setError("Please fill all required fields.");
@@ -51,6 +53,7 @@ const Register = () => {
       email,
       password,
       photoURL,
+      role,
     });
 
     Swal.fire({
@@ -133,6 +136,56 @@ const Register = () => {
               placeholder="Photo URL (Optional)"
               className="w-full border rounded-xl px-4 py-3"
             />
+            <div>
+
+  <label className="block mb-3 font-semibold text-gray-700">
+    Register As
+  </label>
+
+  <div className="grid grid-cols-2 gap-4">
+
+    <label className="border rounded-xl p-4 cursor-pointer hover:border-blue-500 transition">
+
+      <input
+        type="radio"
+        name="role"
+        value="student"
+        defaultChecked
+        className="mr-2"
+      />
+
+      <span className="font-semibold">
+        Student
+      </span>
+
+      <p className="text-sm text-gray-500 mt-2">
+        Browse, enroll and learn from courses.
+      </p>
+
+    </label>
+
+    <label className="border rounded-xl p-4 cursor-pointer hover:border-blue-500 transition">
+
+      <input
+        type="radio"
+        name="role"
+        value="instructor"
+        className="mr-2"
+      />
+
+      <span className="font-semibold">
+        Instructor
+      </span>
+
+      <p className="text-sm text-gray-500 mt-2">
+        Create and manage your own courses.
+      </p>
+
+    </label>
+
+  </div>
+
+</div>
 
             {/* Password */}
             <div className="relative">

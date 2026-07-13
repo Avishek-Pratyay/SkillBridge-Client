@@ -21,7 +21,7 @@ const Explore = () => {
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const [category, setCategory] = useState("");
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("newest");
 
   // Debounce Search
   useEffect(() => {

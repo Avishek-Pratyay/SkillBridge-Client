@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import useAuth from "../../hooks/useAuth";
 import { getCourse } from "../../services/courseService";
-
+import { Link } from "react-router-dom";
 type Course = {
   _id: string;
   title: string;
@@ -17,6 +17,7 @@ type Course = {
 };
 
 const Details = () => {
+  const { user } = useAuth();
   const { id } = useParams();
 
   const [loading, setLoading] = useState(true);
@@ -61,6 +62,7 @@ const Details = () => {
       </div>
     );
   }
+
 
   return (
     <section className="bg-slate-100 min-h-screen py-12">
@@ -137,11 +139,33 @@ const Details = () => {
 
               </div>
 
-              <button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold transition"
-              >
-                Enroll Now
-              </button>
+{user?.role === "student" ? (
+
+<Link
+  to={`/checkout/${course._id}`}
+  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold text-center block transition"
+>
+  Enroll Now
+</Link>
+
+) : (
+
+  <div className="space-y-3">
+
+    <button
+      disabled
+      className="w-full bg-gray-300 text-gray-600 py-4 rounded-xl font-semibold cursor-not-allowed"
+    >
+      Instructor Account
+    </button>
+
+    <p className="text-sm text-center text-gray-500">
+      Only students can enroll in courses.
+    </p>
+
+  </div>
+
+)}
 
             </div>
 
