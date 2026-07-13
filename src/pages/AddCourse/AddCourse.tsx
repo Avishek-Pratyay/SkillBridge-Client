@@ -8,12 +8,13 @@ import {
   FaStar,
   FaCheckCircle,
 } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom";
 import { addCourse } from "../../services/courseService";
 
 const AddCourse = () => {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement>
@@ -45,6 +46,7 @@ const AddCourse = () => {
         timer: 2000,
         showConfirmButton: false,
       });
+      navigate("/dashboard");
 
       form.reset();
       setImage("");

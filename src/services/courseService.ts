@@ -81,3 +81,14 @@ export const updateCourse = async (
 
   return res.data;
 };
+export const getDashboardStats = async () => {
+  const token = getToken();
+
+  const res = await api.get("/courses/my-courses", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
+};

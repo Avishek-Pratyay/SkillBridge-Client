@@ -92,7 +92,7 @@ const UpdateCourse = () => {
         showConfirmButton: false,
       });
 
-      navigate("/manage-courses");
+      navigate("/dashboard");
     } catch {
       Swal.fire({
         icon: "error",
