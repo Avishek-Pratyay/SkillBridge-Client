@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import { getCourse } from "../../services/courseService";
 import { Link } from "react-router-dom";
+import { checkEnrollment } from "../../services/paymentService";
+
 type Course = {
   _id: string;
   title: string;
@@ -23,7 +25,8 @@ const Details = () => {
   const [loading, setLoading] = useState(true);
 
   const [course, setCourse] = useState<Course | null>(null);
-
+  const [enrolled, setEnrolled] =
+  useState(false);
   useEffect(() => {
     fetchCourse();
   }, []);
@@ -33,6 +36,14 @@ const Details = () => {
       const res = await getCourse(id!);
 
       setCourse(res.data);
+      if (user?.role === "student") {
+  const enrollRes =
+    await checkEnrollment(id!);
+
+  setEnrolled(
+    enrollRes.enrolled
+  );
+}
     } catch {
       Swal.fire({
         icon: "error",
@@ -141,12 +152,25 @@ const Details = () => {
 
 {user?.role === "student" ? (
 
-<Link
-  to={`/checkout/${course._id}`}
-  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold text-center block transition"
->
-  Enroll Now
-</Link>
+  enrolled ? (
+
+    <button
+      disabled
+      className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold cursor-not-allowed"
+    >
+      ✅ Already Enrolled
+    </button>
+
+  ) : (
+
+    <Link
+      to={`/checkout/${course._id}`}
+      className="block text-center w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold transition"
+    >
+      Enroll Now
+    </Link>
+
+  )
 
 ) : (
 

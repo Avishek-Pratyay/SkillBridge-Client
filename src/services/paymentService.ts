@@ -12,7 +12,15 @@ await api.get(
 return res.data;
 
 };
+export const checkEnrollment = async (
+  courseId: string
+) => {
+  const res = await api.get(
+    `/payments/check-enrollment/${courseId}`
+  );
 
+  return res.data;
+};
 
 
 export const getMyPayments = async()=>{

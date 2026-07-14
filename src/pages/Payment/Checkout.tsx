@@ -100,29 +100,16 @@ if (
   result.paymentIntent.status === "succeeded"
 ) {
 
-  const paymentData = {
-    courseId: course._id,
-    paymentIntentId:
-      result.paymentIntent.id,
-    amount: course.price,
-  };
-
-
   await api.post(
     "/payments/confirm",
-    paymentData
+    {
+      courseId: course._id,
+      paymentIntentId: result.paymentIntent.id,
+      amount: course.price,
+    }
   );
 
-
-  alert(
-    "Payment successful! 🎉"
-  );
-
-
-  navigate(
-    "/payment-success"
-  );
-
+  navigate("/payment-success");
 }
 
 

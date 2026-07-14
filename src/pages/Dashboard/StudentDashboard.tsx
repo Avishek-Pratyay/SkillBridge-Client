@@ -1,313 +1,391 @@
 import {
-useEffect,
-useState
+  useEffect,
+  useState,
 } from "react";
 
 import {
-Link
+  Link,
 } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
 
 import {
-getMyEnrollments,
-getMyPayments
-}
-from "../../services/paymentService";
+  getMyEnrollments,
+  getMyPayments,
+} from "../../services/paymentService";
 
+const StudentDashboard = () => {
 
-const StudentDashboard =()=>{
+  const { user } = useAuth();
 
+  const [courses, setCourses] = useState<any[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const {user}=useAuth();
+  useEffect(() => {
+    loadData();
+  }, []);
 
+  const loadData = async () => {
+    try {
 
-const [courses,setCourses]=useState<any[]>([]);
+      const courseRes =
+        await getMyEnrollments();
 
-const [payments,setPayments]=useState<any[]>([]);
+      const paymentRes =
+        await getMyPayments();
 
+      setCourses(courseRes.data);
 
+      setPayments(paymentRes.data);
 
-useEffect(()=>{
+    } catch (error) {
 
-loadData();
+      console.log(error);
 
-},[]);
+    } finally {
 
+      setLoading(false);
 
+    }
+  };
 
-const loadData=async()=>{
+  const totalSpent =
+    payments.reduce(
+      (sum, payment) => sum + Number(payment.amount),
+      0
+    );
 
-const courseRes =
-await getMyEnrollments();
+  return (
 
+    <section className="bg-slate-100 min-h-screen py-12">
 
-const paymentRes =
-await getMyPayments();
+      <div className="max-w-7xl mx-auto px-5">
 
+        {/* Welcome */}
 
+        <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-3xl p-10 shadow-xl">
 
-setCourses(
-courseRes.data
-);
+          <h1 className="text-4xl font-bold">
 
+            Welcome Back 👋
 
-setPayments(
-paymentRes.data
-);
+          </h1>
 
-};
+          <p className="mt-3 text-lg">
 
+            {user?.email}
 
+          </p>
 
-return(
+          <p className="mt-2 opacity-90">
 
-<section className="bg-slate-100 min-h-screen py-12">
+            Continue your learning journey.
 
+          </p>
 
-<div className="max-w-7xl mx-auto px-5">
+        </div>
 
+        {/* Statistics */}
 
-<div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-3xl p-10 shadow-xl">
+        <div className="grid md:grid-cols-3 gap-6 mt-10">
 
+          <div className="bg-white rounded-2xl p-8 text-center shadow">
 
-<h1 className="text-4xl font-bold">
+            <div className="text-5xl mb-3">
+              🎓
+            </div>
 
-Welcome Back 👋
+            <h2 className="text-gray-500">
 
-</h1>
+              Enrolled Courses
 
+            </h2>
 
-<p className="mt-3">
+            <p className="text-4xl font-bold text-blue-600 mt-3">
 
-{user?.email}
+              {loading ? "..." : courses.length}
 
-</p>
+            </p>
 
+          </div>
 
-<p className="mt-2">
+          <div className="bg-white rounded-2xl p-8 text-center shadow">
 
-Continue your learning journey
+            <div className="text-5xl mb-3">
+              💳
+            </div>
 
-</p>
+            <h2 className="text-gray-500">
 
+              Total Spent
 
-</div>
+            </h2>
 
+            <p className="text-4xl font-bold text-green-600 mt-3">
 
+              {loading ? "..." : `$${totalSpent}`}
 
+            </p>
 
+          </div>
 
-<div className="grid md:grid-cols-3 gap-6 mt-10">
+          <div className="bg-white rounded-2xl p-8 text-center shadow">
 
+            <div className="text-5xl mb-3">
+              ⭐
+            </div>
 
-<div className="bg-white rounded-2xl p-8 text-center shadow">
+            <h2 className="text-gray-500">
 
-<h2 className="text-gray-500">
+              Status
 
-Enrolled Courses
+            </h2>
 
-</h2>
+            <p className="text-3xl font-bold text-purple-600 mt-3">
 
+              Active
 
-<p className="text-4xl font-bold text-blue-600">
+            </p>
 
-{courses.length}
+          </div>
 
-</p>
+        </div>
 
+        {/* My Enrolled Courses */}
 
-</div>
+        <div className="bg-white rounded-3xl shadow p-10 mt-10">
 
+          <h2 className="text-3xl font-bold mb-8">
 
+            My Enrolled Courses 🎓
 
+          </h2>
 
-<div className="bg-white rounded-2xl p-8 text-center shadow">
+          {loading ? (
 
-<h2 className="text-gray-500">
+            <div className="text-center py-10">
 
-Payments
+              Loading...
 
-</h2>
+            </div>
 
+          ) : courses.length === 0 ? (
 
-<p className="text-4xl font-bold text-green-600">
+            <div className="text-center py-10">
 
-${payments.reduce(
-(a,b)=>a+b.amount,0
-)}
+              <div className="text-6xl mb-4">
+                📚
+              </div>
 
-</p>
+              <h3 className="text-2xl font-bold">
 
+                No Courses Enrolled Yet
 
-</div>
+              </h3>
 
+              <p className="text-gray-500 mt-3">
 
+                Browse courses and start learning today.
 
-<div className="bg-white rounded-2xl p-8 text-center shadow">
+              </p>
 
-<h2 className="text-gray-500">
+              <Link
+                to="/explore"
+                className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl"
+              >
 
-Status
+                Explore Courses
 
-</h2>
+              </Link>
 
+            </div>
 
-<p className="text-3xl font-bold text-purple-600">
+          ) : (
 
-Active
+            <div className="space-y-5">
 
-</p>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div className="bg-white rounded-3xl shadow p-10 mt-10">
-
-
-<h2 className="text-3xl font-bold mb-8">
-
-My Enrolled Courses 🎓
-
-</h2>
-
-
-
-{
-courses.length===0 ?
-
-<p>
-No courses enrolled yet.
-</p>
-
-:
-
-courses.map(course=>(
-
+              {courses.map((course) => (
 
 <div
-key={course._id}
-className="border rounded-xl p-5 mb-5 flex justify-between items-center"
+  key={course._id}
+  className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col lg:flex-row justify-between items-center gap-6 hover:shadow-lg transition"
 >
 
+  <div className="flex items-center gap-5">
 
-<div>
+    <img
+      src={course.image}
+      alt={course.title}
+      className="w-28 h-20 rounded-xl object-cover"
+    />
 
-<h3 className="text-xl font-bold">
+    <div>
 
-{course.title}
+      <h3 className="text-xl font-bold">
 
-</h3>
+        {course.title}
 
+      </h3>
 
-<p className="text-gray-500">
+      <p className="text-gray-500 mt-1">
 
-{course.category}
+        {course.category}
 
-</p>
+      </p>
 
+      <p className="text-yellow-500 mt-2">
 
-</div>
+        ⭐ {course.rating}
 
+      </p>
 
-<Link
+    </div>
 
-to={`/course/${course._id}`}
+  </div>
 
-className="bg-blue-600 text-white px-5 py-3 rounded-xl"
+  <Link
+    to={`/course/${course._id}`}
+    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition"
+  >
 
->
+    Continue Learning →
 
-Continue Learning 🎓
-
-</Link>
-
-
-
-</div>
-
-
-))
-
-}
-
-
+  </Link>
 
 </div>
 
+              ))}
 
+            </div>
 
+          )}
 
+        </div>
 
-<div className="bg-white rounded-3xl shadow p-10 mt-10">
+        {/* Payment History */}
 
+        <div className="bg-white rounded-3xl shadow p-10 mt-10">
 
-<h2 className="text-3xl font-bold mb-6">
+          <h2 className="text-3xl font-bold mb-8">
 
-Payment History 💳
+            Payment History 💳
 
-</h2>
+          </h2>
 
+          {loading ? (
 
+            <div className="text-center py-10">
 
-{
-payments.map(payment=>(
+              Loading...
 
-<div
-key={payment._id}
-className="border-b py-4"
->
+            </div>
 
+          ) : payments.length === 0 ? (
 
-<p>
+            <p className="text-gray-500">
 
-Amount:
-<b>
- ${payment.amount}
-</b>
+              No payment history found.
 
-</p>
+            </p>
 
+          ) : (
 
-<p className="text-gray-500">
+            <div className="overflow-x-auto rounded-xl border">
 
-{new Date(
-payment.paidAt
-).toLocaleDateString()}
+  <table className="min-w-full">
 
-</p>
+    <thead className="bg-blue-600 text-white">
 
+      <tr>
+
+        <th className="text-left px-6 py-4">
+
+          Course
+
+        </th>
+
+        <th className="text-center px-6 py-4">
+
+          Amount
+
+        </th>
+
+        <th className="text-center px-6 py-4">
+
+          Date
+
+        </th>
+
+        <th className="text-center px-6 py-4">
+
+          Status
+
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      {payments.map((payment) => (
+
+        <tr
+          key={payment._id}
+          className="border-b hover:bg-slate-50"
+        >
+
+          <td className="px-6 py-5 font-semibold">
+
+            {payment.courseTitle}
+
+          </td>
+
+          <td className="text-center text-green-600 font-bold">
+
+            ${payment.amount}
+
+          </td>
+
+          <td className="text-center text-gray-500">
+
+            {new Date(
+              payment.paidAt
+            ).toLocaleDateString()}
+
+          </td>
+
+          <td className="text-center">
+
+            <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+
+              Paid
+
+            </span>
+
+          </td>
+
+        </tr>
+
+      ))}
+
+    </tbody>
+
+  </table>
 
 </div>
 
+          )}
 
-))
-}
+        </div>
 
+      </div>
 
+    </section>
 
-</div>
-
-
-
-</div>
-
-
-</section>
-
-
-);
-
+  );
 
 };
-
 
 export default StudentDashboard;
