@@ -233,6 +233,15 @@ const StudentDashboard = () => {
         {course.category}
 
       </p>
+      <div className="mt-3">
+
+  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+
+    Progress: 0%
+
+  </span>
+
+</div>
 
       <p className="text-yellow-500 mt-2">
 
@@ -249,7 +258,7 @@ const StudentDashboard = () => {
     className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition"
   >
 
-    Continue Learning →
+    View C →
 
   </Link>
 

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
 import { getMyCourses } from "../../services/courseService";
+import CourseDetailsModal from "../../components/CourseDetailsModal";
+
 import StudentDashboard from "./StudentDashboard";
 const Dashboard = () => {
 
@@ -12,7 +14,13 @@ const Dashboard = () => {
 }
 
   const [courses, setCourses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
+
+const [selectedCourseId, setSelectedCourseId] =
+  useState("");
+
+const [openModal, setOpenModal] =
+  useState(false);
 
   useEffect(() => {
     loadCourses();
@@ -304,6 +312,15 @@ const Dashboard = () => {
                         </p>
 
                       </div>
+                      <button
+  onClick={() => {
+    setSelectedCourseId(course._id);
+    setOpenModal(true);
+  }}
+  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl transition"
+>
+  Details
+</button>
 
                     </div>
 
@@ -318,6 +335,11 @@ const Dashboard = () => {
         </div>
 
       </div>
+      <CourseDetailsModal
+  open={openModal}
+  courseId={selectedCourseId}
+  onClose={() => setOpenModal(false)}
+/>
 
     </section>
 

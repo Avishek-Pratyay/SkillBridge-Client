@@ -35,3 +35,12 @@ await api.get(
 return res.data;
 
 };
+export const getCourseDetails = async (
+  courseId: string
+) => {
+  const res = await api.get(
+    `/payments/course-details/${courseId}`
+  );
+
+  return res.data;
+};
