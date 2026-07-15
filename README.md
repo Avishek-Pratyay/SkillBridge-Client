@@ -23,11 +23,11 @@ Build • Learn • Teach • Grow
 
 ### Client
 
-https://YOUR-VERCEL-LINK.vercel.app
+https://skill-bridge-client-virid.vercel.app/
 
 ### Server API
 
-https://YOUR-RENDER-LINK.onrender.com
+https://skillbridge-server-r63z.onrender.com
 
 ---
 
@@ -321,17 +321,16 @@ npm run dev
 ```
 src
 │
-├── assets
-├── components
-├── context
-├── firebase
-├── hooks
-├── layouts
-├── pages
-├── routes
-├── services
-├── types
-├── utils
+├── assets-
+├── context-
+├── firebase-
+├── hooks-
+├── layouts-
+├── pages-
+├── routes-
+├── services-
+├── types-
+├── utils-
 └── App.tsx
 ```
 
@@ -342,10 +341,10 @@ src
 ```
 src
 │
-├── config
-├── controllers
-├── middlewares
-├── routes
+├── config-
+├── controllers-
+├── middlewares-
+├── routes-
 ├── index.ts
 ```
 
@@ -385,29 +384,6 @@ Password
 
 ---
 
-# ✅ Assignment Requirements Covered
-
-- Full Stack Application
-- React + TypeScript
-- Node + Express + TypeScript
-- MongoDB Atlas
-- JWT Authentication
-- Firebase Google Login
-- Stripe Payment
-- Role-Based Authorization
-- CRUD Operations
-- Protected Routes
-- Search Functionality
-- Category Filtering
-- Sorting
-- Skeleton Loading
-- Dashboard Analytics
-- Recharts Integration
-- Responsive Design
-- Professional UI/UX
-- RESTful API
-
----
 
 # 🔮 Future Improvements
 
@@ -432,7 +408,7 @@ https://github.com/Avishek-Pratyay
 
 LinkedIn
 
-(Add Your LinkedIn URL)
+https://www.linkedin.com/in/avishek-chanda/
 
 ---
 
