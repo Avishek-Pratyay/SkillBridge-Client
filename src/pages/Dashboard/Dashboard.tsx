@@ -4,7 +4,19 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { getMyCourses } from "../../services/courseService";
 import CourseDetailsModal from "../../components/CourseDetailsModal";
-
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Legend,
+} from "recharts";
 import StudentDashboard from "./StudentDashboard";
 const Dashboard = () => {
 
@@ -56,6 +68,35 @@ const [openModal, setOpenModal] =
           ) / totalCourses
         ).toFixed(1)
       : "0";
+
+      const revenueData = courses.map((course) => ({
+  title:
+    course.title.length > 12
+      ? course.title.substring(0, 12) + "..."
+      : course.title,
+
+  revenue:
+    Number(course.price) *
+    (course.totalStudents || 0),
+}));
+
+const enrollmentData = courses.map((course) => ({
+  name:
+    course.title.length > 10
+      ? course.title.substring(0, 10)
+      : course.title,
+
+  students:
+    course.totalStudents || 0,
+}));
+
+const COLORS = [
+  "#2563eb",
+  "#06b6d4",
+  "#14b8a6",
+  "#8b5cf6",
+  "#f59e0b",
+];
 
   return (
 
@@ -156,6 +197,109 @@ const [openModal, setOpenModal] =
           </div>
 
         </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 mt-10">
+
+  {/* Revenue */}
+
+  <div className="bg-white rounded-3xl shadow-lg p-8">
+
+    <h2 className="text-2xl font-bold mb-6">
+
+      Revenue By Course
+
+    </h2>
+
+    <ResponsiveContainer
+      width="100%"
+      height={320}
+    >
+
+      <BarChart
+        data={revenueData}
+      >
+
+        <CartesianGrid
+          strokeDasharray="3 3"
+        />
+
+        <XAxis
+          dataKey="title"
+        />
+
+        <YAxis />
+
+        <Tooltip />
+
+        <Bar
+          dataKey="revenue"
+          radius={[8,8,0,0]}
+        />
+
+      </BarChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+  {/* Students */}
+
+  <div className="bg-white rounded-3xl shadow-lg p-8">
+
+    <h2 className="text-2xl font-bold mb-6">
+
+      Student Distribution
+
+    </h2>
+
+    <ResponsiveContainer
+      width="100%"
+      height={320}
+    >
+
+      <PieChart>
+
+        <Pie
+          data={enrollmentData}
+          dataKey="students"
+          nameKey="name"
+          outerRadius={110}
+          label
+        >
+
+          {
+
+            enrollmentData.map(
+              (_, index) => (
+
+                <Cell
+                  key={index}
+                  fill={
+                    COLORS[
+                      index %
+                      COLORS.length
+                    ]
+                  }
+                />
+
+              )
+            )
+
+          }
+
+        </Pie>
+
+        <Tooltip />
+
+        <Legend />
+
+      </PieChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
 
         {/* Quick Actions */}
 
