@@ -23,16 +23,17 @@ const AddCourse = () => {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-
-    const course = {
-      title: formData.get("title"),
-      category: formData.get("category"),
-      image: formData.get("image"),
-      shortDescription: formData.get("shortDescription"),
-      fullDescription: formData.get("fullDescription"),
-      price: Number(formData.get("price")),
-      rating: Number(formData.get("rating")),
-    };
+const course = {
+  title: (formData.get("title") as string) || "",
+  category: (formData.get("category") as string) || "",
+  image: (formData.get("image") as string) || "",
+  shortDescription:
+    (formData.get("shortDescription") as string) || "",
+  fullDescription:
+    (formData.get("fullDescription") as string) || "",
+  price: Number(formData.get("price")),
+  rating: Number(formData.get("rating")),
+};
 
     try {
       setLoading(true);

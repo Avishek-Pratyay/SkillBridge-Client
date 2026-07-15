@@ -1,6 +1,6 @@
 import api from "../../services/api";
-import { FormEvent, useRef, useState } from "react";
-
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
 import {
   GoogleAuthProvider,
   signInWithPopup,

@@ -28,8 +28,8 @@ const Register = () => {
   const confirmPassword =
     (formData.get("confirmPassword") as string) || "";
     const role =
-  (formData.get("role") as string) || "student";
-
+  ((formData.get("role") as "student" | "instructor") ??
+    "student");
   if (!name || !email || !password) {
     setError("Please fill all required fields.");
     return;
