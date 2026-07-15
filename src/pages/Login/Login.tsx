@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
@@ -8,6 +8,19 @@ const Login = () => {
 
   const [error, setError] = useState("");
 
+  const emailRef = useRef<HTMLInputElement>(null);
+const passwordRef = useRef<HTMLInputElement>(null);
+
+const fillDemo = (
+  email: string,
+  password: string
+) => {
+  if (emailRef.current)
+    emailRef.current.value = email;
+
+  if (passwordRef.current)
+    passwordRef.current.value = password;
+};
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -60,7 +73,8 @@ const Login = () => {
             </label>
 
             <input
-              name="email"
+  ref={emailRef}
+  name="email"
               type="email"
               placeholder="Enter your email"
               required
@@ -87,7 +101,8 @@ const Login = () => {
             </div>
 
             <input
-              name="password"
+  ref={passwordRef}
+  name="password"
               type="password"
               placeholder="Enter your password"
               required
@@ -108,6 +123,61 @@ const Login = () => {
           >
             Login
           </button>
+          <div className="relative py-3">
+
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t"></div>
+  </div>
+
+  <div className="relative flex justify-center">
+    <span className="bg-white px-4 text-gray-500 text-sm">
+      Demo Accounts
+    </span>
+  </div>
+
+</div>
+
+<div className="grid grid-cols-2 gap-4">
+
+  <button
+    type="button"
+    onClick={() =>
+      fillDemo(
+        "student@skillbridge.com",
+        "123456"
+      )
+    }
+    className="border rounded-xl py-3 font-semibold hover:bg-blue-50 transition"
+  >
+    🎓 Demo Student
+  </button>
+
+  <button
+    type="button"
+    onClick={() =>
+      fillDemo(
+        "instructor@skillbridge.com",
+        "123456"
+      )
+    }
+    className="border rounded-xl py-3 font-semibold hover:bg-green-50 transition"
+  >
+    👨‍🏫 Demo Instructor
+  </button>
+
+</div>
+
+<button
+  type="button"
+  onClick={() =>
+    alert(
+      "Google Login will be available in a future update."
+    )
+  }
+  className="w-full mt-5 border py-3 rounded-xl font-semibold hover:bg-gray-50 transition"
+>
+  Continue with Google
+</button>
 
         </form>
 
