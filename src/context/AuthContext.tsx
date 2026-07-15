@@ -22,6 +22,7 @@ type AuthContextType = {
     email: string,
     password: string
   ) => Promise<boolean>;
+  googleLogin:(data: any)=>void;
   logout: () => void;
 };
 
@@ -70,6 +71,20 @@ setUser({
       return false;
     }
   };
+  const googleLogin = (data: any) => {
+
+  saveToken(data.token);
+
+  setUser({
+    name: data.user.name,
+    email: data.user.email,
+    photoURL: data.user.photoURL,
+    role: data.user.role,
+    subscription: data.user.subscription,
+  });
+
+};
+
 
   const logout = () => {
     removeToken();
@@ -82,6 +97,7 @@ setUser({
         user,
         loading,
         login,
+        googleLogin,
         logout,
       }}
     >

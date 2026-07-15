@@ -1,11 +1,19 @@
+import api from "../../services/api";
 import { FormEvent, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+
+import { auth } from "../../firebase/firebase";import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login,googleLogin, } = useAuth();
   const navigate = useNavigate();
 
+  const provider = new GoogleAuthProvider();
   const [error, setError] = useState("");
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -39,7 +47,32 @@ const fillDemo = (
       setError("Invalid email or password.");
     }
   };
+const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(
+      auth,
+      provider
+    );
 
+    const googleUser = result.user;
+
+    const res = await api.post(
+      "/auth/google-login",
+      {
+        name: googleUser.displayName,
+        email: googleUser.email,
+        photoURL: googleUser.photoURL,
+      }
+    );
+
+googleLogin(res.data);
+
+navigate("/");
+
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center px-4 py-10">
 
@@ -169,13 +202,14 @@ const fillDemo = (
 
 <button
   type="button"
-  onClick={() =>
-    alert(
-      "Google Login will be available in a future update."
-    )
-  }
-  className="w-full mt-5 border py-3 rounded-xl font-semibold hover:bg-gray-50 transition"
+  onClick={handleGoogleLogin}
+  className="w-full mt-5 border border-gray-300 hover:border-blue-600 hover:bg-blue-50 py-3 rounded-xl font-semibold transition flex items-center justify-center gap-3"
 >
+  <img
+    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+    className="w-5 h-5"
+  />
+
   Continue with Google
 </button>
 
